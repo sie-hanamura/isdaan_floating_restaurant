@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Isdaan Floating Restaurant</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/admin-style.css">
+    <style>
+        :root {
+            --sidebar-bg: #1a4c8c;
+            --sidebar-color: white;
+            --header-bg: white;
+            --primary-color: #1a4c8c;
+        }
+        
+        #sidebar-wrapper {
+            background-color: var(--sidebar-bg) !important;
+            color: var(--sidebar-color);
+            width: 250px !important;
+        }
+        
+        .list-group-item-action {
+            background-color: var(--sidebar-bg) !important;
+            color: var(--sidebar-color) !important;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 0;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .list-group-item-action:hover {
+            background-color: #FFFFFF !important;
+            color: var(--primary-color) !important;
+        }
+        
+        .list-group-item-action.active {
+            background-color: #FFFFFF !important;
+            color: var(--primary-color) !important;
+            border-left: none;
+        }
+        
+        .list-group-item-action i {
+            width: 24px;
+            text-align: center;
+            margin-right: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .list-group-item-action:hover i,
+        .list-group-item-action.active i {
+            color: var(--primary-color);
+        }
+        
+        /* Nav item arrow indicator */
+        .list-group-item-action::after {
+            content: '';
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-left: 5px solid #fff;
+            transition: all 0.3s ease;
+        }
+        
+        .list-group-item-action:hover::after,
+        .list-group-item-action.active::after {
+            border-left: 5px solid var(--primary-color);
+        }
+        
+        .navbar {
+            background-color: var(--header-bg) !important;
+        }
+        
+        .card {
+            border-radius: 10px;
+            border: none;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-header {
+            background-color: white;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .restaurant-logo {
+            height: 36px;
+            margin-right: 10px;
+        }
+        
+        .restaurant-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .cottage-image {
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        
+        .badge-pending {
+            background-color: #FFC107;
+            color: #000;
+        }
+        
+        .badge-confirmed {
+            background-color: #28A745;
+        }
+        
+        .badge-cancelled {
+            background-color: #DC3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="d-flex" id="wrapper">
+        <!-- Sidebar -->
+        <div class="text-white" id="sidebar-wrapper">
+            <div class="sidebar-heading p-3 border-bottom d-flex align-items-center">
+                <img src="images/icn.png" alt="Isdaan Logo" class="restaurant-logo">
+                <div>
+                    <h5 class="mb-0">Isdaan Floating Restaurant</h5>
+                </div>
+            </div>
+            <div class="list-group list-group-flush">
+                <a href="#" class="list-group-item list-group-item-action active" id="dashboard-tab">
+                    <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                </a>
+                <a href="#" class="list-group-item list-group-item-action" id="reservations-tab">
+                    <i class="fas fa-calendar-check me-2"></i> Approved
+                </a>
+                <a href="#" class="list-group-item list-group-item-action" id="users-tab">
+                    <i class="fas fa-users me-2"></i> Registered User
+                </a>
+                <a href="#" class="list-group-item list-group-item-action" id="settings-tab">
+                    <i class="fas fa-cog me-2"></i> Settings
+                </a>
+            </div>
+            <div class="mt-auto p-3 border-top">
+                <a href="#" id="admin-logout" class="btn btn-outline-light w-100">
+                    <i class="fas fa-sign-out-alt me-2"></i> Sign out
+                </a>
+            </div>
+        </div>
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper" class="bg-light">
+            <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm">
+                <div class="container-fluid">
+                    <button class="btn btn-link" id="menu-toggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="ms-auto d-flex align-items-center">
+                        <div class="dropdown">
+                            <a class="btn btn-light dropdown-toggle" href="#" role="button" id="adminDropdown" data-bs-toggle="dropdown">
+                                <i class="fas fa-user-circle me-1"></i> <span id="admin-name">Admin</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="adminDropdown">
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-user-cog me-2"></i> Profile</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#" id="admin-logout-dropdown"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="container-fluid p-4">
+                <!-- Dashboard Page -->
+                <div id="dashboard-page" class="content-page">
+                    <h1 class="mb-4"><i class="fas fa-tachometer-alt me-2"></i> Dashboard</h1>
+                    
+                    <div class="row">
+                        <div class="col-md-3 mb-4">
+                            <div class="card bg-primary text-white h-100">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h5 class="card-title">Total Reservations</h5>
+                                            <h2 class="card-text" id="total-reservations">0</h2>
+                                        </div>
+                                        <i class="fas fa-calendar-check fa-3x"></i>
+                                    </div>
+                                </div>
+                                <div class="card-footer d-flex align-items-center justify-content-between">
+                                    <a href="#" class="text-white text-decoration-none" id="reservations-link">View Details</a>
+                                    <div><i class="fas fa-angle-right"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="card bg-success text-white h-100">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h5 class="card-title">Confirmed</h5>
+                                            <h2 class="card-text" id="confirmed-reservations">0</h2>
+                                        </div>
+                                        <i class="fas fa-check-circle fa-3x"></i>
+                                    </div>
+                                </div>
+                                <div class="card-footer d-flex align-items-center justify-content-between">
+                                    <a href="#" class="text-white text-decoration-none" id="confirmed-link">View Details</a>
+                                    <div><i class="fas fa-angle-right"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="card bg-warning text-white h-100">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h5 class="card-title">Pending</h5>
+                                            <h2 class="card-text" id="pending-reservations">0</h2>
+                                        </div>
+                                        <i class="fas fa-hourglass-half fa-3x"></i>
+                                    </div>
+                                </div>
+                                <div class="card-footer d-flex align-items-center justify-content-between">
+                                    <a href="#" class="text-white text-decoration-none" id="pending-link">View Details</a>
+                                    <div><i class="fas fa-angle-right"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="card bg-info text-white h-100">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h5 class="card-title">Registered Users</h5>
+                                            <h2 class="card-text" id="total-users">0</h2>
+                                        </div>
+                                        <i class="fas fa-users fa-3x"></i>
+                                    </div>
+                                </div>
+                                <div class="card-footer d-flex align-items-center justify-content-between">
+                                    <a href="#" class="text-white text-decoration-none" id="users-link">View Details</a>
+                                    <div><i class="fas fa-angle-right"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-8 mb-4">
+                            <div class="card shadow-sm">
+                                <div class="card-header bg-white">
+                                    <h5 class="card-title mb-0">Recent Reservations</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Customer</th>
+                                                    <th>Date</th>
+                                                    <th>Cottage</th>
+                                                    <th>Status</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="recent-reservations-table">
+                                                <!-- Recent reservations will be loaded here -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="card-footer bg-white">
+                                    <a href="#" id="view-all-reservations" class="text-decoration-none">View all reservations</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-lg-4 mb-4">
+                            <div class="card shadow-sm h-100">
+                                <div class="card-header bg-white">
+                                    <h5 class="card-title mb-0">Today's Reservations</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div id="no-reservations-today" class="alert alert-info" style="display: none;">
+                                        No reservations scheduled for today.
+                                    </div>
+                                    <div id="today-reservations-list">
+                                        <!-- Today's reservations will be loaded here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reservations Page -->
+                <div id="reservations-page" class="content-page" style="display: none;">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h1><i class="fas fa-calendar-check me-2"></i> Reservations</h1>
+                        <div>
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Search..." id="reservation-search">
+                                <button class="btn btn-primary" type="button">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-white p-3">
+                            <ul class="nav nav-tabs card-header-tabs" id="reservationTabs" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all" type="button" role="tab">
+                                        All Reservations
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="pending-tab" data-bs-toggle="tab" data-bs-target="#pending" type="button" role="tab">
+                                        Pending
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="confirmed-tab" data-bs-toggle="tab" data-bs-target="#confirmed" type="button" role="tab">
+                                        Confirmed
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="cancelled-tab" data-bs-toggle="tab" data-bs-target="#cancelled" type="button" role="tab">
+                                        Cancelled
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <div class="tab-content" id="reservationTabsContent">
+                                <div class="tab-pane fade show active" id="all" role="tabpanel">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Customer</th>
+                                                    <th>Contact</th>
+                                                    <th>Date & Time</th>
+                                                    <th>Cottage Type</th>
+                                                    <th>Guests</th>
+                                                    <th>Status</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="all-reservations-table">
+                                                <!-- All reservations will be loaded here -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="pending" role="tabpanel">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Customer</th>
+                                                    <th>Contact</th>
+                                                    <th>Date & Time</th>
+                                                    <th>Cottage Type</th>
+                                                    <th>Guests</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="pending-reservations-table">
+                                                <!-- Pending reservations will be loaded here -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="confirmed" role="tabpanel">
+                                    <!-- Confirmed tab content -->
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Customer</th>
+                                                    <th>Contact</th>
+                                                    <th>Date & Time</th>
+                                                    <th>Cottage Type</th>
+                                                    <th>Guests</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="confirmed-reservations-table">
+                                                <!-- Confirmed reservations will be loaded here -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="cancelled" role="tabpanel">
+                                    <!-- Cancelled tab content -->
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Customer</th>
+                                                    <th>Contact</th>
+                                                    <th>Date & Time</th>
+                                                    <th>Cottage Type</th>
+                                                    <th>Guests</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="cancelled-reservations-table">
+                                                <!-- Cancelled reservations will be loaded here -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Users Page -->
+                <div id="users-page" class="content-page" style="display: none;">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h1><i class="fas fa-users me-2"></i> Users</h1>
+                        <div>
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Search users..." id="user-search">
+                                <button class="btn btn-primary" type="button">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-white">
+                            <h5 class="card-title mb-0">Registered Users</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Phone</th>
+                                            <th>Registered On</th>
+                                            <th>Reservations</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="users-table">
+                                        <!-- Users will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings Page -->
+                <div id="settings-page" class="content-page" style="display: none;">
+                    <h1 class="mb-4"><i class="fas fa-cog me-2"></i> Settings</h1>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div class="card shadow-sm">
+                                <div class="card-header bg-white">
+                                    <h5 class="card-title mb-0">Cottage Settings</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form id="cottage-settings-form">
+                                        <div class="mb-3">
+                                            <label class="form-label">Small Cottage Price:</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text">₱</span>
+                                                <input type="number" class="form-control" id="small-cottage-price" value="1000">
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Medium Cottage Price:</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text">₱</span>
+                                                <input type="number" class="form-control" id="medium-cottage-price" value="2000">
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Large Cottage Price:</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text">₱</span>
+                                                <input type="number" class="form-control" id="large-cottage-price" value="3500">
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="card shadow-sm">
+                                <div class="card-header bg-white">
+                                    <h5 class="card-title mb-0">Admin Account</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form id="admin-settings-form">
+                                        <div class="mb-3">
+                                            <label for="admin-username-setting" class="form-label">Username:</label>
+                                            <input type="text" class="form-control" id="admin-username-setting" value="admin">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="admin-password-setting" class="form-label">Change Password:</label>
+                                            <input type="password" class="form-control" id="admin-password-setting" placeholder="New password">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="admin-confirm-password" class="form-label">Confirm Password:</label>
+                                            <input type="password" class="form-control" id="admin-confirm-password" placeholder="Confirm new password">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Update Account</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reservation Details Modal -->
+    <div class="modal fade" id="reservation-details-modal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">Reservation Details</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="reservation-details-content">
+                        <!-- Reservation details will be loaded here -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success" id="approve-reservation-btn">Approve</button>
+                    <button type="button" class="btn btn-danger" id="reject-reservation-btn">Reject</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Details Modal -->
+    <div class="modal fade" id="user-details-modal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">User Details</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="user-details-content">
+                        <!-- User details will be loaded here -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/admin-auth.js"></script>
+    <script src="js/admin-dashboard.js"></script>
+</body>
+</html>

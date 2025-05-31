@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Isdaan Floating Restaurant</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            background-image: url('images/nbg.jfif');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .login-container {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+        
+        .logo-img {
+            width: 100px;
+            height: auto;
+            margin-bottom: 15px;
+        }
+        
+        .restaurant-name {
+            color: #1a4c8c;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+        
+        .form-control {
+            background-color: white;
+            border: 1px solid #ced4da;
+            margin-bottom: 15px;
+        }
+        
+        .login-btn {
+            background-color: #1a4c8c;
+            color: white;
+            width: 100px;
+            border: none;
+            padding: 8px 0;
+            border-radius: 5px;
+            font-weight: 500;
+            margin-top: 10px;
+        }
+        
+        .back-link {
+            margin-top: 20px;
+            display: block;
+            color: #1a4c8c;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <img src="images/nlogo.jfif" alt="Isdaan Floating Restaurant Logo" class="logo-img">
+        <h2 class="restaurant-name">ISDAAN FLOATING<br>RESTAURANT</h2>
+        
+        <div id="login-error" class="alert alert-danger" style="display: none;">
+            Invalid username or password. Please try again.
+        </div>
+        
+        <form id="admin-login-form">
+            <input type="text" class="form-control" id="admin-username" placeholder="admin" required>
+            <input type="password" class="form-control" id="admin-password" placeholder="••••••••" required>
+            <button type="submit" class="login-btn">Login</button>
+        </form>
+        
+        <a href="index.html" class="back-link">
+            <i class="fas fa-arrow-left me-1"></i> Back to Main Website
+        </a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/admin-auth.js"></script>
+</body>
+</html>
