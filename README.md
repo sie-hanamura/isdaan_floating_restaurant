@@ -53,7 +53,7 @@ A responsive, front-end web reservation system for Isdaan Floating Restaurant. I
    
 ## 🎥 Demo Video
 
-📽️ [Watch the Demo Video Here]([https://drive.google.com/your-demo-link](https://drive.google.com/file/d/10twlTkk8YF5J2Ljowsb5NIPOzj-bO5iN/view))
+📽️ [Watch the Demo Video Here](https://drive.google.com/file/d/10twlTkk8YF5J2Ljowsb5NIPOzj-bO5iN/view)
 
 ## 📁 Folder Structure
 
